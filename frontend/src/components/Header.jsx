@@ -3,21 +3,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Header() {
-  const userInfo = true;
+  const userInfo = false;
 
   return (
-    <header className="flex justify-between p-5">
-      <div className="capitalize">Logo</div>
-      <nav className="child:capitalize flex gap-3">
+    <header className="flex justify-between p-5 shadow-sm text-md">
+      <Link className="capitalize">Logo</Link>
+      <nav className="child:capitalize flex gap-5">
         {userInfo ? (
           <>
             <Link>Home</Link>
-            <Link>About</Link>
+            <button>Logout</button>
           </>
         ) : (
           <>
-            <Link>Login</Link>
-            <Link>Register</Link>
+            <Link to="/login">Login</Link>
+            <Link to="/register">Register</Link>
           </>
         )}
       </nav>
