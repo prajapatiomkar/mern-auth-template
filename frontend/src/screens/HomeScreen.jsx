@@ -1,5 +1,10 @@
 import React from "react";
+import Body from "../components/Body";
 
 export default function HomeScreen() {
-  return <div>HomeScreen</div>;
+  return (
+    <div>
+      <Body />
+    </div>
+  );
 }
