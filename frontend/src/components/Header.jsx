@@ -1,9 +1,24 @@
 import React from "react";
-
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useLogoutMutation } from "../features/users/usersSlice.js";
+import { logout } from "../features/authSlice.js";
 
 export default function Header() {
-  const userInfo = false;
+  const { userInfo } = useSelector((state) => state.auth);
+  const [userLogout, { isLoading }] = useLogoutMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logoutHandler = async () => {
+    try {
+      await userLogout().unwrap();
+      dispatch(logout());
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <header className="flex justify-between p-5 shadow-sm text-md">
@@ -12,7 +27,7 @@ export default function Header() {
         {userInfo ? (
           <>
             <Link>Home</Link>
-            <button>Logout</button>
+            <button onClick={logoutHandler}>Logout</button>
           </>
         ) : (
           <>

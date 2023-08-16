@@ -51,4 +51,8 @@ const registerController = asyncHandler(async (req, res) => {
   }
 });
 
-export { loginController, registerController };
+const logoutController = asyncHandler(async (req, res) => {
+  res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
+  res.status(200).json({ message: "user logout successfully" });
+});
+export { loginController, registerController, logoutController };

@@ -1,13 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useRegisterMutation } from "../features/users/usersSlice";
+import { setCredentials } from "../features/authSlice";
 
 export default function RegisterScreen() {
+  const [userRegister, { isLoading }] = useRegisterMutation();
+  const { userInfo } = useSelector((state) => state.auth);
   const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const onSubmitHandler = (data) => {
-    console.log(data);
+  const onSubmitHandler = async (data) => {
+    if (data.password !== data.confirmPassword) {
+      console.log("those passwords don't match. Try again.");
+      return;
+    } else {
+      try {
+        const res = await userRegister(data).unwrap();
+        dispatch(setCredentials({ ...res }));
+        navigate("/");
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(`/`);
+    }
+  }, [navigate, userInfo]);
+
   return (
     <section className="mt-7">
       <form

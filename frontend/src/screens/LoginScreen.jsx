@@ -1,13 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useLoginMutation } from "../features/users/usersSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import { setCredentials } from "../features/authSlice";
 
 export default function LoginScreen() {
+  const [userLogin, { isLoading }] = useLoginMutation();
+  const { userInfo } = useSelector((state) => state.auth);
   const { register, handleSubmit } = useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const onSubmitHandler = (data) => {
-    console.log(data)
+  const onSubmitHandler = async (data) => {
+    try {
+      const res = await userLogin(data).unwrap();
+      dispatch(setCredentials({ ...res }));
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(`/`);
+    }
+  }, [navigate, userInfo]);
 
   return (
     <section className="mt-7">
